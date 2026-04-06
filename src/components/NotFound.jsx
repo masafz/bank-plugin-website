@@ -11,7 +11,7 @@ export default function NotFound() {
         className="bg-[#DB620A] text-white text-[16px] font-semibold px-4 py-2 rounded-[4px] flex items-center gap-2 hover:bg-[#DB620ACC] duration-200 cursor-pointer mt-3"
       >
         <span className="text-[18px]">
-          <img src={whiteArrow} alt="arrow" width={13} />
+          <img src={whiteArrow} alt="arrow" width={13} className="transform rotate-180" />
         </span>
         Back to Home
       </button>
