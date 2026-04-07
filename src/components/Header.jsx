@@ -15,7 +15,7 @@ export default function Header() {
             onClick={() => navigate("/")}
             className="h-[44px] w-auto object-contain cursor-pointer"
           />
-          <span className="absolute -bottom-2 right-2 text-[20px] font-bold text-[#962A1E] translate-y-full">
+          <span className="absolute -bottom-3 right-2 text-[20px] font-bold text-[#962A1E] translate-y-full">
             Bank Plugin
           </span>
         </div>
