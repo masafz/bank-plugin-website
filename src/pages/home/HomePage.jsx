@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import spiralImg from "../../assets/icons/circle.png";
 import timeLeft from "../../assets/icons/time-left.png";
 import flashIcon from "../../assets/icons/flash-icon.png";
@@ -11,11 +11,34 @@ import checkBlack from "../../assets/icons/check-black.png";
 import checkIcon from "../../assets/icons/check-icon.png";
 import busyLogo from "../../assets/icons/busy-logo.png";
 import heroGif from "../../assets/icons/hero-gif.gif";
-import stepsGif from "../../assets/icons/steps.gif";
+import regStep1 from "../../assets/images/home/step1.png";
+import regStep2 from "../../assets/images/home/step2.png";
+import regStep3 from "../../assets/images/home/step3.png";
+import regStep4 from "../../assets/images/home/step4.png";
+import regStep5 from "../../assets/images/home/step5.png";
+import regStep6 from "../../assets/images/home/step6.png";
 import { tabData } from "../../utils/constant";
+
+const steps = [regStep1, regStep2, regStep3, regStep4, regStep5, regStep6];
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState("payments");
+  const [visibleCount, setVisibleCount] = useState(1);
+
+  useEffect(() => {
+    const delay = visibleCount >= steps.length ? 4000 : 2000;
+
+    const timer = setTimeout(() => {
+      if (visibleCount >= steps.length) {
+        setVisibleCount(1);
+      } else {
+        setVisibleCount((c) => c + 1);
+      }
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [visibleCount]);
+
   return (
     <>
       {/* ===== HERO SECTION ===== */}
@@ -311,11 +334,26 @@ export default function HomePage() {
         <h4 className="text-sm sm:text-base md:text-[16px] font-medium text-[#000000B2] max-w-[90%] sm:max-w-[600px]">
           Stages of Onboarding in Bank Plugin
         </h4>
-        <img
-          src={stepsGif}
-          alt="How it works steps"
-          className="w-full max-w-[750px] py-8 sm:py-10 md:py-12"
-        />
+        <div className="flex flex-col w-full max-w-[750px] mr-[20px]">
+          {steps.slice(0, visibleCount).map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt={`Step ${i + 1}`}
+              className="w-full"
+              style={{
+                animation: "fadeIn 0.5s ease forwards",
+              }}
+            />
+          ))}
+
+          <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+      `}</style>
+        </div>
         {/* CTA Card */}
         <div className="w-full bg-[#FEF9F5] rounded-[20px] md:rounded-[28px] px-4 sm:px-8 md:px-16 py-10 md:py-14 mt-6 sm:mt-8 md:mt-10">
           {/* Heading */}
