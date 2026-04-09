@@ -48,7 +48,7 @@ export default function HomePage() {
 
           {/* CONTENT */}
           <div
-            className="relative w-full mx-auto px-4 sm:px-6 md:px-10 lg:px-[70px] py-12 md:py-16 lg:py-[40px] grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+            className="relative w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-10 lg:px-[70px] py-12 md:py-16 lg:py-[40px] grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
             style={{ zIndex: 1 }}
           >
             {/* LEFT CONTENT */}
@@ -59,7 +59,7 @@ export default function HomePage() {
                   Trusted By 10,000+ Businesses Across India
                 </span>
               </p>
-              <h1 className="text-[28px] sm:text-[36px] md:text-[42px] lg:text-[50px] font-black leading-tight tracking-tight text-black">
+              <h1 className="text-[28px] sm:text-[36px] md:text-[42px] min-[768px]:!text-[29px] min-[1257px]:!text-[49px] lg:text-[50px] font-black leading-tight tracking-tight text-black">
                 Accounting Made Easy <br /> With{" "}
                 <span className="text-[#DB620A]">Bank Plugin</span>
               </h1>
@@ -71,12 +71,10 @@ export default function HomePage() {
                 Reconciliation From Desktop Based Accounting ERP Platforms
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                {/* REGISTER */}
                 <button className="w-full sm:w-auto bg-[#DB620A] flex justify-center items-center gap-2.5 border border-[#DB620A] text-white px-6 sm:px-10 lg:px-[60px] py-[10px] rounded-[8px] text-[14px] sm:text-[16px] lg:text-[18px] font-medium transition-opacity duration-300 hover:opacity-80">
                   Register
                   <img src={rightWhite} alt="arrow" width={20} />
                 </button>
-                {/* LOGIN */}
                 <button className="group relative w-full sm:w-auto flex justify-center items-center gap-2.5 border border-[#DB620A] bg-white text-[#DB620A] px-6 sm:px-10 lg:px-[60px] py-[10px] rounded-[8px] text-[14px] sm:text-[16px] lg:text-[18px] font-medium transition-all duration-300 hover:bg-[#DB620A] hover:text-white">
                   Login
                   <span className="relative w-[20px] h-[20px]">
@@ -110,12 +108,13 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
         <div
-          className="relative w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-[70px] flex justify-center -mt-[40px] sm:-mt-[44px]"
+          className="relative w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-10 lg:px-[70px] flex justify-center -mt-[40px] sm:-mt-[44px]"
           style={{ zIndex: 2 }}
         >
           <div className="w-full sm:w-[90%] lg:w-[80%] bg-white shadow-[0px_1px_21.1px_0px_rgba(0,0,0,0.25)] rounded-xl px-5 sm:px-6 md:px-8 py-5 flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-6 text-center sm:text-left">
-            <p className="text-[#808080] text-sm sm:text-base md:text-lg lg:text-2xl leading-snug">
+            <p className="text-[#808080] text-sm sm:text-base md:text-lg lg:text-2xl min-[3840px]:!text-[40px] leading-snug">
               Get Hands-On: Schedule Your Personalized Product Demo!
             </p>
             <button className="w-full sm:w-auto shrink-0 bg-[#153C69] text-white px-6 py-[14px] text-sm sm:text-base md:text-lg lg:text-[20px] font-bold rounded-lg flex items-center justify-center gap-2.5">
@@ -125,7 +124,7 @@ export default function HomePage() {
         </div>
       </div>
       {/* ===== ERP SECTION ===== */}
-      <section className="px-4 sm:px-6 md:px-10 lg:px-[70px] pt-16 pb-16 max-w-[1400px] mx-auto">
+      <section className="px-4 sm:px-6 md:px-10 lg:px-[70px] pt-16 pb-16 max-w-[1920px] mx-auto">
         <div className="text-center">
           <p className="inline-block bg-[linear-gradient(90deg,_#FFEDD4_0%,_#FFF7ED_100%)] text-[#DB620A] px-4 py-2 rounded-full text-[13px] sm:text-[13px] font-bold mb-4">
             ● SEAMLESS INTEGRATIONS
@@ -149,7 +148,9 @@ export default function HomePage() {
               <div className="bg-[#F9F9F9] rounded-[12px] h-[100px] flex items-center justify-center mb-6">
                 <img src={tallyLogo} alt="tally" width={180} />
               </div>
-              <h3 className="text-[26px] font-bold text-[#101828] mb-2">Tally Integration</h3>
+              <h3 className="text-[26px] font-bold text-[#101828] mb-2">
+                Tally Integration
+              </h3>
               <p className="text-[#6A7282] text-[14px] font-medium mb-4">
                 SUPPORTED VERSIONS
               </p>
@@ -175,7 +176,9 @@ export default function HomePage() {
               <div className="bg-[#F9F9F9] rounded-[12px] h-[100px] flex items-center justify-center mb-6">
                 <img src={busyLogo} alt="tally" width={180} />
               </div>
-              <h3 className="text-[26px] font-bold text-[#101828] mb-2">Busy Integration</h3>
+              <h3 className="text-[26px] font-bold text-[#101828] mb-2">
+                Busy Integration
+              </h3>
               <p className="text-[#6A7282] text-[14px] font-medium mb-4">
                 SUPPORTED VERSIONS
               </p>
@@ -230,7 +233,7 @@ export default function HomePage() {
         </div>
 
         {/* Cards */}
-        <div className="flex flex-wrap gap-6 justify-center">
+        <div className="flex flex-wrap gap-6 justify-center max-w-[1920px] mx-auto">
           {tabData[activeTab].map((card, index) => (
             <div
               key={index}
@@ -242,7 +245,9 @@ export default function HomePage() {
                   <img src={checkOrange} alt="" width={20} />
                 </div>
                 <h3 className="font-bold text-lg mb-2">{card.title}</h3>
-                <p className="text-[#000000B2] text-sm font-medium">{card.desc}</p>
+                <p className="text-[#000000B2] text-sm font-medium">
+                  {card.desc}
+                </p>
               </div>
 
               {/* Button pinned bottom-left */}
@@ -256,7 +261,7 @@ export default function HomePage() {
 
       {/* ================= ADVANTAGES ================= */}
       <section className="bg-[linear-gradient(105.4deg,rgba(219,98,10,0.38)_0.41%,rgba(219,98,10,0.1)_49.41%,rgba(219,98,10,0.38)_98.41%)] py-16 px-4">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-[1920px] mx-auto">
           {/* Top Label */}
           <p className="text-center text-[#d65a00] text-[22px] font-bold mb-3">
             Advantages

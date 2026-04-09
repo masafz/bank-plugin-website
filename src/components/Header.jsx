@@ -7,7 +7,7 @@ export default function Header() {
   const navigate = useNavigate();
   return (
     <header className="h-[65px] bg-gradient-to-b from-[#EF7F1A] to-[#BE2A2A]">
-      <div className="w-full flex justify-between items-center px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-40 h-full">
+      <div className="w-full max-w-[1920px] mx-auto flex justify-between items-center px-6 md:px-10 lg:px-16 h-full">
         <div className="relative">
           <img
             src={iciciLogo}
