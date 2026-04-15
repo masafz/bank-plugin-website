@@ -5,7 +5,7 @@ export default function Stepper({ steps, currentStep }) {
         <div key={index} className="flex items-start flex-1 last:flex-none">
           <div className="flex flex-col items-center">
             <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-[15px] transition-colors
+              className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-[16px] transition-colors
                 ${index < currentStep ? "bg-[#DB620A] text-white"
                 : index === currentStep ? "bg-[#DB620A] text-white"
                 : "bg-[#E5E7EB] text-[#999]"}`}

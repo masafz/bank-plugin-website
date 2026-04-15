@@ -15,7 +15,7 @@ export default function Header() {
             onClick={() => navigate("/")}
             className="h-[44px] w-auto object-contain cursor-pointer"
           />
-          <span className="absolute -bottom-3 right-2 text-[20px] font-bold text-[#962A1E] translate-y-full">
+          <span className="absolute -bottom-3 right-2 text-[20px] font-bold text-[#962A1E] translate-y-full select-none">
             Bank Plugin
           </span>
         </div>
@@ -34,11 +34,7 @@ export default function Header() {
           </span>
           <span
             onClick={() =>
-              window.open(
-                "https://www.bankplugin.com",
-                "_blank",
-                "noopener,noreferrer",
-              )
+              document.getElementById("erp-section")?.scrollIntoView({ behavior: "smooth" })
             }
             className="cursor-pointer"
           >
@@ -73,11 +69,7 @@ export default function Header() {
             <span
               onClick={() => {
                 setIsOpen(false);
-                window.open(
-                  "https://www.bankplugin.com",
-                  "_blank",
-                  "noopener,noreferrer",
-                );
+                document.getElementById("erp-section")?.scrollIntoView({ behavior: "smooth" })
               }}
               className="cursor-pointer"
             >

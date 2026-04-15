@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import spiralImg from "../../assets/icons/circle.png";
 import timeLeft from "../../assets/icons/time-left.png";
 import flashIcon from "../../assets/icons/flash-icon.png";
@@ -18,12 +18,20 @@ import regStep4 from "../../assets/images/home/step4.png";
 import regStep5 from "../../assets/images/home/step5.png";
 import regStep6 from "../../assets/images/home/step6.png";
 import { tabData } from "../../utils/constant";
+import { useNavigate } from "react-router-dom";
 
 const steps = [regStep1, regStep2, regStep3, regStep4, regStep5, regStep6];
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState("payments");
   const [visibleCount, setVisibleCount] = useState(1);
+  const sectionRef = useRef()
+
+  const scrollToSection = () => {
+    sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const delay = visibleCount >= steps.length ? 4000 : 2000;
@@ -94,7 +102,10 @@ export default function HomePage() {
                 Reconciliation From Desktop Based Accounting ERP Platforms
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                <button className="w-full sm:w-auto bg-[#DB620A] flex justify-center items-center gap-2.5 border border-[#DB620A] text-white px-6 sm:px-10 lg:px-[60px] py-[10px] rounded-[8px] text-[14px] sm:text-[16px] lg:text-[18px] font-medium transition-opacity duration-300 hover:opacity-80">
+                <button
+                  onClick={scrollToSection}
+                  className="w-full sm:w-auto bg-[#DB620A] flex justify-center items-center gap-2.5 border border-[#DB620A] text-white px-6 sm:px-10 lg:px-[60px] py-[10px] rounded-[8px] text-[14px] sm:text-[16px] lg:text-[18px] font-medium transition-opacity duration-300 hover:opacity-80 cursor-pointer"
+                >
                   Register
                   <img src={rightWhite} alt="arrow" width={20} />
                 </button>
@@ -148,7 +159,7 @@ export default function HomePage() {
       </div>
       {/* ===== ERP SECTION ===== */}
       <section className="px-4 sm:px-6 md:px-10 lg:px-[70px] pt-16 pb-16 max-w-[1920px] mx-auto">
-        <div className="text-center">
+        <div id="erp-section" ref={sectionRef} className="text-center">
           <p className="inline-block bg-[linear-gradient(90deg,_#FFEDD4_0%,_#FFF7ED_100%)] text-[#DB620A] px-4 py-2 rounded-full text-[13px] sm:text-[13px] font-bold mb-4">
             ● SEAMLESS INTEGRATIONS
           </p>
@@ -188,7 +199,7 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <button className="w-full bg-[linear-gradient(180deg,#DB620A_0%,#F07D3C_100%)] hover:bg-[#ac4d09] text-white py-3 rounded-[10px] flex items-center justify-center gap-2">
+            <button onClick={() => navigate('/register', {state: 'tally'})} className="w-full bg-[linear-gradient(180deg,#DB620A_0%,#F07D3C_100%)] hover:bg-[#ac4d09] text-white py-3 rounded-[10px] flex items-center justify-center gap-2 cursor-pointer">
               Tally Bank Plugin
               <img src={rightWhite} alt="" width={18} />
             </button>

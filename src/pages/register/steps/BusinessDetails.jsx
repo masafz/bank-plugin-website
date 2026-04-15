@@ -1,15 +1,19 @@
 import { useState } from "react";
 import tallyLogo from "../../../assets/icons/tally-logo.png";
-import tooltipIcon from "../../../assets/icons/warning.svg";
+import tooltipIcon from "../../../assets/icons/svgs/warning.svg";
+import arrowIcon from "../../../assets/icons/svgs/arrow.svg";
+import { useLocation } from "react-router-dom";
 
 export default function BusinessDetails({ formData, updateFormData, onNext }) {
   const [errors, setErrors] = useState({});
+  const location = useLocation()
+  const state = location.state
 
   const isFormValid =
     formData.companyName.trim() &&
     formData.gstNumber.trim() &&
     formData.state.trim() &&
-    formData.erpType;
+    (formData.erpType || state);
 
   const validate = () => {
     const newErrors = {};
@@ -18,7 +22,7 @@ export default function BusinessDetails({ formData, updateFormData, onNext }) {
     if (!formData.gstNumber.trim())
       newErrors.gstNumber = "GST number is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
-    if (!formData.erpType) newErrors.erpType = "Please select an ERP type";
+    if (!formData.erpType && !state) newErrors.erpType = "Please select an ERP type";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -31,11 +35,12 @@ export default function BusinessDetails({ formData, updateFormData, onNext }) {
     <div className="flex flex-col gap-5">
       {/* Company Name */}
       <div>
-        <label className="block text-sm font-semibold text-[#1a1a1a] mb-1.5">
-          Company Name
+        <label htmlFor="company_name" className="block text-sm font-semibold text-[#1E2939] mb-1.5">
+          Company Name<span className="text-red-500">*</span>
         </label>
         <input
           type="text"
+          id="company_name"
           name="companyName"
           value={formData.companyName}
           onChange={(e) => updateFormData({ companyName: e.target.value })}
@@ -49,11 +54,12 @@ export default function BusinessDetails({ formData, updateFormData, onNext }) {
       </div>
       {/* GST Number */}
       <div>
-        <label className="block text-sm font-semibold text-[#1a1a1a] mb-1.5">
-          GST Number
+        <label htmlFor="gst_number" className="block text-sm font-semibold text-[#1E2939] mb-1.5">
+          GST Number<span className="text-red-500">*</span>
         </label>
         <input
           type="text"
+          id="gst_number"
           name="gstNumber"
           value={formData.gstNumber}
           onChange={(e) => updateFormData({ gstNumber: e.target.value })}
@@ -61,7 +67,7 @@ export default function BusinessDetails({ formData, updateFormData, onNext }) {
           className={`w-full border rounded-lg px-3.5 py-[11px] text-sm bg-[#fafafa] outline-none focus:border-[#e67e22] transition-colors
             ${errors.gstNumber ? "border-red-400" : "border-[#e0e0e0]"}`}
         />
-        <p className="text-xs text-[#aaa] mt-1">
+        <p className="text-xs text-[#6A7282] mt-1">
           Enter GST to auto-fetch company details
         </p>
         {errors.gstNumber && (
@@ -70,10 +76,11 @@ export default function BusinessDetails({ formData, updateFormData, onNext }) {
       </div>
       {/* State */}
       <div>
-        <label className="block text-sm font-semibold text-[#1a1a1a] mb-1.5">
-          State
+        <label htmlFor="state" className="block text-sm font-semibold text-[#1E2939] mb-1.5">
+          State<span className="text-red-500">*</span>
         </label>
         <select
+          id="state"
           name="state"
           value={formData.state}
           onChange={(e) => updateFormData({ state: e.target.value })}
@@ -129,24 +136,23 @@ export default function BusinessDetails({ formData, updateFormData, onNext }) {
       </div>
       {/* ERP Type */}
       <div>
-        <label className="flex items-center gap-1.5 text-sm font-semibold text-[#1a1a1a] mb-1.5">
+        <label htmlFor="erp_type" className="flex items-center gap-1.5 text-sm font-semibold text-[#1E2939] mb-1.5">
           ERP Type
           <img src={tooltipIcon} alt="icon" />
         </label>
         <div className="relative">
           <select
+            id="erp_type"
             name="erpType"
-            value={formData.erpType}
+            value={formData.erpType = state || formData.erpType}
             onChange={(e) => updateFormData({ erpType: e.target.value })}
+            disabled={state}
             className={`w-full border rounded-lg px-3.5 py-[11px] pr-16 text-sm bg-[#fafafa] outline-none focus:border-[#e67e22] transition-colors appearance-none cursor-pointer
-              ${errors.erpType ? "border-red-400" : "border-[#e0e0e0]"}`}
+              ${errors.erpType ? "border-red-400" : "border-[#e0e0e0]"} ${state ? 'opacity-60' : ''}`}
           >
             <option value="">Select ERP type</option>
             <option value="tally">Tally</option>
-            <option value="sap">SAP</option>
-            <option value="zoho">Zoho Books</option>
             <option value="busy">Busy</option>
-            <option value="marg">Marg ERP</option>
           </select>
           <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
             <img
@@ -166,7 +172,7 @@ export default function BusinessDetails({ formData, updateFormData, onNext }) {
         className={`w-full active:scale-[0.99] transition-all rounded-lg py-[15px] text-base font-semibold text-white flex items-center justify-center gap-2.5 mt-2
     ${!isFormValid ? "bg-[#f0a07a] hover:bg-[#e8906a]" : "bg-[#DB620A] cursor-pointer"}`}
       >
-        Continue →
+        Continue <img src={arrowIcon} alt="icon" />
       </button>
     </div>
   );
