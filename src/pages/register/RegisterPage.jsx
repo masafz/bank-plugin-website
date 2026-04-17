@@ -7,7 +7,7 @@ import StepThree from "./steps/AccountSetup";
 const STEPS = ["Business Details", "Contact Verification", "Account Setup"];
 
 export default function RegisterPage() {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     // Step 1 - Business Details
     companyName: "",

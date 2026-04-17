@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import arrowIcon from '../../../assets/icons/svgs/arrow.svg'
+import {post} from '../../../api/apiHelpers'
 
 export default function ContactVerification({
   formData,
@@ -72,7 +73,7 @@ export default function ContactVerification({
       emailOtpRefs.current[index - 1]?.focus();
   };
 
-  const isFormValid = formData.email.trim() && formData.phone.trim();
+  const isFormValid = formData.email.trim() && formData.phone.trim() && phoneOtpComplete && emailOtpComplete;
 
   const validate = () => {
     const newErrors = {};
@@ -91,35 +92,51 @@ export default function ContactVerification({
   };
 
   const handleSendOtp = (field) => {
-    const newErrors = {};
-    if (field === "phone") {
-      if (!formData.phone.trim()) {
-        newErrors.phone = "Mobile number is required";
-      } else if (!/^\d{10}$/.test(formData.phone)) {
-        newErrors.phone = "Enter a valid 10-digit mobile number";
-      } else {
-        setOtpSent((prev) => ({ ...prev, phone: true }));
-        setPhoneOtp(["", "", "", "", "", ""]);
-        startCountdown();
-      }
+  const newErrors = {};
+  if (field === "phone") {
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Mobile number is required";
+    } else if (!/^\d{10}$/.test(formData.phone)) {
+      newErrors.phone = "Enter a valid 10-digit mobile number";
+    } else {
+      setOtpSent((prev) => ({ ...prev, phone: true }));
+      setPhoneOtp(["", "", "", "", "", ""]);
+      startCountdown();
+      sendOtp("phone");
     }
-    if (field === "email") {
-      if (!formData.email.trim()) {
-        newErrors.email = "Email is required";
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.email = "Enter a valid email address";
-      } else {
-        setOtpSent((prev) => ({ ...prev, email: true }));
-        setEmailOtp(["", "", "", "", "", ""]);
-        startEmailCountdown();
-      }
+  }
+  if (field === "email") {
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Enter a valid email address";
+    } else {
+      setOtpSent((prev) => ({ ...prev, email: true }));
+      setEmailOtp(["", "", "", "", "", ""]);
+      startEmailCountdown();
+      sendOtp("email");
     }
-    setErrors((prev) => ({ ...prev, ...newErrors }));
-  };
+  }
+  setErrors((prev) => ({ ...prev, ...newErrors }));
+};
 
   const handleNext = () => {
+    if (!phoneOtpComplete || !emailOtpComplete) return;
     if (validate()) onNext();
   };
+
+  const sendOtp = async (field) => {
+  const payload = field === "phone"
+    ? { type: "mobile_no", mobile_no: formData.phone }
+    : { type: "email", email: formData.email };
+
+  try {
+    const res = await post("sendOtp", payload);
+    console.log(res);
+  } catch (error) {
+    console.log("error", error);
+  }
+};
 
   return (
     <div className="flex flex-col gap-5">
@@ -143,7 +160,7 @@ export default function ContactVerification({
             placeholder="9876543210"
             maxLength={10}
             disabled={phoneFieldDisabled}
-            className="flex-1 px-3.5 py-[11px] text-sm bg-transparent outline-none disabled:cursor-not-allowed"
+            className="flex-1 pl-3.5 sm:px-3.5 py-[11px] text-sm bg-transparent outline-none disabled:cursor-not-allowed"
           />
           {phoneOtpComplete && otpSent.phone ? (
             <span className="flex items-center px-3.5">
@@ -156,7 +173,7 @@ export default function ContactVerification({
               type="button"
               onClick={() => handleSendOtp("phone")}
               disabled={phoneFieldDisabled}
-              className="px-3.5 text-sm font-semibold text-[#e67e22] hover:text-[#c96a0a] transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
+              className="pr-3.5 sm:px-3.5 text-sm font-semibold text-[#e67e22] hover:text-[#c96a0a] transition-colors whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {otpSent.phone ? "" : "Send OTP"}
             </button>

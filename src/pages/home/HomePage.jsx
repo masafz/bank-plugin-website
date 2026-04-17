@@ -147,11 +147,11 @@ export default function HomePage() {
           className="relative w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-10 lg:px-[70px] flex justify-center -mt-[40px] sm:-mt-[44px]"
           style={{ zIndex: 2 }}
         >
-          <div className="w-full sm:w-[90%] lg:w-[80%] bg-white shadow-[0px_1px_21.1px_0px_rgba(0,0,0,0.25)] rounded-xl px-5 sm:px-6 md:px-8 py-5 flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-6 text-center sm:text-left">
-            <p className="text-[#808080] text-sm sm:text-base md:text-lg lg:text-2xl min-[3840px]:!text-[40px] leading-snug">
+          <div className="w-full sm:w-[90%] lg:w-[80%] bg-white shadow-[0px_1px_21.1px_0px_rgba(0,0,0,0.25)] rounded-xl px-5 sm:px-6 md:px-8 py-5 flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-6 md:gap-10 text-center sm:text-left">
+            <p className="text-[#808080] text-sm sm:text-base md:text-lg lg:text-2xl min-[1920px]:!text-[35px] leading-snug">
               Get Hands-On: Schedule Your Personalized Product Demo!
             </p>
-            <button className="w-full sm:w-auto shrink-0 bg-[#153C69] text-white px-6 py-[14px] text-sm sm:text-base md:text-lg lg:text-[20px] font-bold rounded-lg flex items-center justify-center gap-2.5">
+            <button className="w-full sm:w-auto shrink-0 bg-[#153C69] text-white px-6 py-[14px] text-sm sm:text-base md:text-lg lg:text-[20px] min-[1920px]:!text-[35px] font-bold rounded-lg flex items-center justify-center gap-2.5">
               Watch Demo <img src={timeLeft} alt="" width={18} />
             </button>
           </div>
