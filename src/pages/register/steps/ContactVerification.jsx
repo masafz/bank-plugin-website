@@ -10,17 +10,19 @@ export default function ContactVerification({
   const [errors, setErrors] = useState({});
   const [otpSent, setOtpSent] = useState({ phone: false, email: false });
   const [phoneOtp, setPhoneOtp] = useState(["", "", "", "", "", ""]);
+  const [phoneOtpFromApi, setPhoneOtpFromApi] = useState("");
   const [countdown, setCountdown] = useState(0);
   const otpRefs = useRef([]);
   const timerRef = useRef(null);
-
+  
   const [emailOtp, setEmailOtp] = useState(["", "", "", "", "", ""]);
+  const [emailOtpFromApi, setEmailOtpFromApi] = useState("");
   const [emailCountdown, setEmailCountdown] = useState(0);
   const emailOtpRefs = useRef([]);
   const emailTimerRef = useRef(null);
 
-  const phoneOtpComplete = phoneOtp.every((d) => d !== "");
-  const emailOtpComplete = emailOtp.every((d) => d !== "");
+  const phoneOtpComplete = phoneOtp.every((d) => d !== "") && phoneOtp.join("") === phoneOtpFromApi;
+  const emailOtpComplete = emailOtp.every((d) => d !== "") && emailOtp.join("") === emailOtpFromApi;
 
   const phoneFieldDisabled = otpSent.email && !emailOtpComplete;
   const emailFieldDisabled = otpSent.phone && !phoneOtpComplete;
@@ -48,12 +50,19 @@ export default function ContactVerification({
   };
 
   const handleOtpChange = (index, value) => {
-    if (!/^\d?$/.test(value)) return;
-    const updated = [...phoneOtp];
-    updated[index] = value;
-    setPhoneOtp(updated);
-    if (value && index < 5) otpRefs.current[index + 1]?.focus();
-  };
+  if (!/^\d?$/.test(value)) return;
+  const updated = [...phoneOtp];
+  updated[index] = value;
+  setPhoneOtp(updated);
+  if (value && index < 5) otpRefs.current[index + 1]?.focus();
+
+  const enteredOtp = updated.join("");
+  if (enteredOtp.length === 6 && enteredOtp !== phoneOtpFromApi) {
+    setErrors((prev) => ({ ...prev, phone: "Incorrect OTP, please try again" }));
+  } else {
+    setErrors((prev) => ({ ...prev, phone: undefined }));
+  }
+};
 
   const handleOtpKeyDown = (index, e) => {
     if (e.key === "Backspace" && !phoneOtp[index] && index > 0)
@@ -61,12 +70,19 @@ export default function ContactVerification({
   };
 
   const handleEmailOtpChange = (index, value) => {
-    if (!/^\d?$/.test(value)) return;
-    const updated = [...emailOtp];
-    updated[index] = value;
-    setEmailOtp(updated);
-    if (value && index < 5) emailOtpRefs.current[index + 1]?.focus();
-  };
+  if (!/^\d?$/.test(value)) return;
+  const updated = [...emailOtp];
+  updated[index] = value;
+  setEmailOtp(updated);
+  if (value && index < 5) emailOtpRefs.current[index + 1]?.focus();
+
+  const enteredOtp = updated.join("");
+  if (enteredOtp.length === 6 && enteredOtp !== emailOtpFromApi) {
+    setErrors((prev) => ({ ...prev, email: "Incorrect OTP, please try again" }));
+  } else {
+    setErrors((prev) => ({ ...prev, email: undefined }));
+  }
+};
 
   const handleEmailOtpKeyDown = (index, e) => {
     if (e.key === "Backspace" && !emailOtp[index] && index > 0)
@@ -125,14 +141,16 @@ export default function ContactVerification({
     if (validate()) onNext();
   };
 
-  const sendOtp = async (field) => {
+const sendOtp = async (field) => {
   const payload = field === "phone"
     ? { type: "mobile_no", mobile_no: formData.phone }
     : { type: "email", email: formData.email };
 
   try {
     const res = await post("sendOtp", payload);
-    console.log(res);
+    console.log('res', res)
+    if (field === "phone") setPhoneOtpFromApi(String(res.otp));
+    else setEmailOtpFromApi(String(res.otp));
   } catch (error) {
     console.log("error", error);
   }

@@ -3,11 +3,13 @@ import Stepper from "./components/Stepper";
 import StepOne from "./steps/BusinessDetails";
 import StepTwo from "./steps/ContactVerification";
 import StepThree from "./steps/AccountSetup";
+import { post } from "../../api/apiHelpers";
+import { toast } from "react-toastify";
 
 const STEPS = ["Business Details", "Contact Verification", "Account Setup"];
 
 export default function RegisterPage() {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
     // Step 1 - Business Details
     companyName: "",
@@ -35,9 +37,30 @@ export default function RegisterPage() {
   const prevStep = () => setCurrentStep((s) => Math.max(s - 1, 0));
 
   const handleSubmit = async () => {
+    const payload = {
+      legal_name: formData.companyName,
+      mobile: formData.phone,
+      password: formData.password,
+      confirm_password: formData.confirmPassword,
+      email: formData.email,
+      product_type: formData.erpType,
+      serial_number: formData.erpSerial,
+      state: formData.state,
+      register_type: "DIRECT",
+      partner_id: "",
+      employee_id: formData.rmId,
+      gst_number: formData.gstNumber,
+    };
     try {
-      // await api.register(formData);
-      console.log("formData", formData);
+      const res = await post("register", payload);
+      console.log(res);
+      if(res?.status === '200') {
+        toast.success(res?.msg)
+        window.location.href = 'https://www.bankplugin.com'
+      } else if( res?.status === '201') {
+        console.log('first', res)
+        toast.error(res?.msg[0])
+      }
     } catch (err) {
       console.error(err);
     }
