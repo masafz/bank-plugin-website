@@ -58,7 +58,6 @@ export default function RegisterPage() {
         toast.success(res?.msg)
         window.location.href = 'https://www.bankplugin.com'
       } else if( res?.status === '201') {
-        console.log('first', res)
         toast.error(res?.msg[0])
       }
     } catch (err) {
@@ -87,7 +86,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-[calc(100vh-65px)] bg-white flex justify-center items-center px-4 py-12">
-      <div className="bg-white rounded-xl px-3 sm:px-5 sm:px-10 py-10 w-full max-w-[520px] shadow-[0px_4px_24px_0px_#00000014]">
+      <div className="bg-white rounded-xl px-3 sm:px-5 py-10 w-full max-w-[520px] shadow-[0px_4px_24px_0px_#00000014]">
         <h1 className="text-[25px] sm:text-3xl font-black text-[#1E2939] mb-2">
           Register for Bank Plugin
         </h1>

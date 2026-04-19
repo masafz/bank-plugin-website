@@ -205,7 +205,7 @@ const sendOtp = async (field) => {
         {otpSent.phone && !phoneOtpComplete && (
           <div className="mt-3 flex flex-col gap-2">
             <p className="text-xs text-[#6A7282]">
-              OTP sent to +91 {formData.phone.slice(0, 7)}***
+              OTP sent to +91 ********{formData.phone.slice(8, 10)}
             </p>
             <label className="text-sm font-semibold text-[#1E2939]">Enter OTP</label>
             <div className="flex gap-2">
