@@ -1,9 +1,11 @@
 import { useState } from "react";
+import TncModal from "../components/TncModal";
 
 export default function AccountSetup({ formData, updateFormData, onSubmit }) {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showTnc, setShowTnc] = useState(false);
 
   const validate = () => {
     const newErrors = {};
@@ -38,7 +40,10 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
     <div className="flex flex-col gap-5">
       {/* ERP Serial */}
       <div>
-        <label htmlFor="erp_serial" className="block text-sm font-semibold text-[#1E2939] mb-1.5">
+        <label
+          htmlFor="erp_serial"
+          className="block text-sm font-semibold text-[#1E2939] mb-1.5"
+        >
           ERP Serial / License Number<span className="text-red-500">*</span>
         </label>
         <input
@@ -58,7 +63,10 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
 
       {/* RM ID */}
       <div>
-        <label htmlFor="rm_id" className="block text-sm font-semibold text-[#1E2939] mb-1.5">
+        <label
+          htmlFor="rm_id"
+          className="block text-sm font-semibold text-[#1E2939] mb-1.5"
+        >
           RM ID <span className="text-[#6A7282]">(Optional)</span>
         </label>
         <input
@@ -78,7 +86,10 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
 
       {/* Password */}
       <div>
-        <label htmlFor="password" className="block text-sm font-semibold text-[#1E2939] mb-1.5">
+        <label
+          htmlFor="password"
+          className="block text-sm font-semibold text-[#1E2939] mb-1.5"
+        >
           Password<span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -100,14 +111,34 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
           >
             {showPassword ? (
               // Eye-off icon
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
                 <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
                 <line x1="1" y1="1" x2="23" y2="23" />
               </svg>
             ) : (
               // Eye icon
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
@@ -121,7 +152,10 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
 
       {/* Confirm Password */}
       <div>
-        <label htmlFor="confirm_password" className="block text-sm font-semibold text-[#1E2939] mb-1.5">
+        <label
+          htmlFor="confirm_password"
+          className="block text-sm font-semibold text-[#1E2939] mb-1.5"
+        >
           Confirm Password<span className="text-red-500">*</span>
         </label>
         <div className="relative">
@@ -130,7 +164,9 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
             id="confirm_password"
             name="confirmPassword"
             value={formData.confirmPassword}
-            onChange={(e) => updateFormData({ confirmPassword: e.target.value })}
+            onChange={(e) =>
+              updateFormData({ confirmPassword: e.target.value })
+            }
             placeholder="Re-enter your password"
             className={`w-full border rounded-lg px-3.5 py-[11px] pr-10 text-sm bg-[#fafafa] outline-none focus:border-[#e67e22] transition-colors
               ${errors.confirmPassword ? "border-red-400" : "border-[#e0e0e0]"}`}
@@ -142,13 +178,33 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
             tabIndex={-1}
           >
             {showConfirmPassword ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
                 <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
                 <line x1="1" y1="1" x2="23" y2="23" />
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
@@ -162,18 +218,36 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
 
       {/* Legal Consent */}
       <div className="flex flex-col gap-3">
-        <p className="text-[16px] font-semibold text-[#1E2939]">Legal Consent</p>
+        <p className="text-[16px] font-semibold text-[#1E2939]">
+          Legal Consent
+        </p>
 
-        <div className="flex items-start gap-2.5">
+        <div
+          className="flex items-start gap-2.5"
+          onClick={(e) => {
+            e.preventDefault();
+            setShowTnc(true);
+          }}
+        >
           <input
             type="checkbox"
             id="consent_terms"
+            readOnly
             checked={!!formData.consentTerms}
-            onChange={(e) => updateFormData({ consentTerms: e.target.checked })}
+            onChange={(e) => {
+              if (!e.target.checked) {
+                updateFormData({ consentTerms: false });
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
             className="mt-0.5 w-4 h-4 accent-[#e67e22] cursor-pointer shrink-0"
           />
-          <label htmlFor="consent_terms" className="text-sm font-medium text-[#1E2939] leading-snug cursor-pointer">
-            I have read &amp; agree to the Terms and Conditions - Bank Plugin on ERP Platform
+          <label
+            htmlFor="consent_terms"
+            className="text-sm font-medium text-[#1E2939] leading-snug cursor-pointer"
+          >
+            I have read &amp; agree to the Terms and Conditions - Bank Plugin on
+            ERP Platform
             <span className="text-red-500">*</span>
           </label>
         </div>
@@ -186,10 +260,15 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
             type="checkbox"
             id="consentDataSharing"
             checked={!!formData.consentDataSharing}
-            onChange={(e) => updateFormData({ consentDataSharing: e.target.checked })}
+            onChange={(e) =>
+              updateFormData({ consentDataSharing: e.target.checked })
+            }
             className="mt-0.5 w-4 h-4 accent-[#e67e22] cursor-pointer shrink-0"
           />
-          <label htmlFor="consentDataSharing" className="text-sm font-medium text-[#1E2939] leading-snug cursor-pointer">
+          <label
+            htmlFor="consentDataSharing"
+            className="text-sm font-medium text-[#1E2939] leading-snug cursor-pointer"
+          >
             I consent to data sharing with ERP integration partners
           </label>
         </div>
@@ -212,6 +291,16 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
           Login
         </a>
       </p>
+
+      {/* T&C Modal */}
+      <TncModal
+        isOpen={showTnc}
+        onAgree={() => {
+          updateFormData({ consentTerms: true });
+          setShowTnc(false);
+        }}
+        onClose={() => setShowTnc(false)}
+      />
     </div>
   );
 }
