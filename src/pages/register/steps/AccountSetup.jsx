@@ -1,11 +1,13 @@
 import { useState } from "react";
 import TncModal from "../components/TncModal";
+import ConsentModal from "../components/ConsentModal";
 
 export default function AccountSetup({ formData, updateFormData, onSubmit }) {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showTnc, setShowTnc] = useState(false);
+  const [showConsent, setShowConsent] = useState(false);
 
   const validate = () => {
     const newErrors = {};
@@ -226,7 +228,11 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
           className="flex items-start gap-2.5"
           onClick={(e) => {
             e.preventDefault();
-            setShowTnc(true);
+            if(!formData.consentTerms) {
+              setShowTnc(true);
+            } else {
+              updateFormData({consentTerms: false})
+            }
           }}
         >
           <input
@@ -237,6 +243,8 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
             onChange={(e) => {
               if (!e.target.checked) {
                 updateFormData({ consentTerms: false });
+              } else {
+                setShowTnc(true);
               }
             }}
             onClick={(e) => e.stopPropagation()}
@@ -255,14 +263,27 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
           <p className="text-xs text-red-500 -mt-1">{errors.consentTerms}</p>
         )}
 
-        <div className="flex items-start gap-2.5">
+        <div className="flex items-start gap-2.5" onClick={(e) => {
+            e.preventDefault();
+            if(!formData.consentDataSharing) {
+              setShowConsent(true);
+            } else {
+              updateFormData({consentDataSharing: false})
+            }
+          }}>
           <input
             type="checkbox"
             id="consentDataSharing"
+            readOnly
             checked={!!formData.consentDataSharing}
-            onChange={(e) =>
-              updateFormData({ consentDataSharing: e.target.checked })
-            }
+            onChange={(e) => {
+              if (!e.target.checked) {
+                updateFormData({ consentDataSharing: false });
+              } else {
+                setShowConsent(true);
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
             className="mt-0.5 w-4 h-4 accent-[#e67e22] cursor-pointer shrink-0"
           />
           <label
@@ -300,6 +321,14 @@ export default function AccountSetup({ formData, updateFormData, onSubmit }) {
           setShowTnc(false);
         }}
         onClose={() => setShowTnc(false)}
+      />
+      <ConsentModal
+        isOpen={showConsent}
+        onAgree={() => {
+          updateFormData({ consentDataSharing: true });
+          setShowConsent(false);
+        }}
+        onClose={() => setShowConsent(false)}
       />
     </div>
   );

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 const STEPS = ["Business Details", "Contact Verification", "Account Setup"];
 
 export default function RegisterPage() {
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(2);
   const [formData, setFormData] = useState({
     // Step 1 - Business Details
     companyName: "",
