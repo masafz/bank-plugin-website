@@ -10,19 +10,22 @@ export default function ContactVerification({
   const [errors, setErrors] = useState({});
   const [otpSent, setOtpSent] = useState({ phone: false, email: false });
   const [phoneOtp, setPhoneOtp] = useState(["", "", "", "", "", ""]);
-  const [phoneOtpFromApi, setPhoneOtpFromApi] = useState("");
+  const [phoneOtpVerified, setPhoneOtpVerified] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const otpRefs = useRef([]);
   const timerRef = useRef(null);
   
   const [emailOtp, setEmailOtp] = useState(["", "", "", "", "", ""]);
-  const [emailOtpFromApi, setEmailOtpFromApi] = useState("");
+  const [emailOtpVerified, setEmailOtpVerified] = useState(false);
   const [emailCountdown, setEmailCountdown] = useState(0);
   const emailOtpRefs = useRef([]);
   const emailTimerRef = useRef(null);
 
-  const phoneOtpComplete = phoneOtp.every((d) => d !== "") && phoneOtp.join("") === phoneOtpFromApi;
-  const emailOtpComplete = emailOtp.every((d) => d !== "") && emailOtp.join("") === emailOtpFromApi;
+  const phoneOtpFilled = phoneOtp.every((d) => d !== "");
+  const emailOtpFilled = emailOtp.every((d) => d !== "");
+
+  const phoneOtpComplete = phoneOtpFilled && phoneOtpVerified;
+  const emailOtpComplete = emailOtpFilled && emailOtpVerified;
 
   const phoneFieldDisabled = otpSent.email && !emailOtpComplete;
   const emailFieldDisabled = otpSent.phone && !phoneOtpComplete;
@@ -50,19 +53,16 @@ export default function ContactVerification({
   };
 
   const handleOtpChange = (index, value) => {
-  if (!/^\d?$/.test(value)) return;
-  const updated = [...phoneOtp];
-  updated[index] = value;
-  setPhoneOtp(updated);
-  if (value && index < 5) otpRefs.current[index + 1]?.focus();
+    if (!/^\d?$/.test(value)) return;
+    const updated = [...phoneOtp];
+    updated[index] = value;
+    setPhoneOtp(updated);
+    if (value && index < 5) otpRefs.current[index + 1]?.focus();
 
-  const enteredOtp = updated.join("");
-  if (enteredOtp.length === 6 && enteredOtp !== phoneOtpFromApi) {
-    setErrors((prev) => ({ ...prev, phone: "Incorrect OTP, please try again" }));
-  } else {
-    setErrors((prev) => ({ ...prev, phone: undefined }));
-  }
-};
+    const enteredOtp = updated.join("");
+    if (enteredOtp.length === 6) verifyOtp("phone", enteredOtp);
+    else setErrors((prev) => ({ ...prev, phone: undefined }));
+  };
 
   const handleOtpKeyDown = (index, e) => {
     if (e.key === "Backspace" && !phoneOtp[index] && index > 0)
@@ -70,19 +70,16 @@ export default function ContactVerification({
   };
 
   const handleEmailOtpChange = (index, value) => {
-  if (!/^\d?$/.test(value)) return;
-  const updated = [...emailOtp];
-  updated[index] = value;
-  setEmailOtp(updated);
-  if (value && index < 5) emailOtpRefs.current[index + 1]?.focus();
+    if (!/^\d?$/.test(value)) return;
+    const updated = [...emailOtp];
+    updated[index] = value;
+    setEmailOtp(updated);
+    if (value && index < 5) emailOtpRefs.current[index + 1]?.focus();
 
-  const enteredOtp = updated.join("");
-  if (enteredOtp.length === 6 && enteredOtp !== emailOtpFromApi) {
-    setErrors((prev) => ({ ...prev, email: "Incorrect OTP, please try again" }));
-  } else {
-    setErrors((prev) => ({ ...prev, email: undefined }));
-  }
-};
+    const enteredOtp = updated.join("");
+    if (enteredOtp.length === 6) verifyOtp("email", enteredOtp);
+    else setErrors((prev) => ({ ...prev, email: undefined }));
+  };
 
   const handleEmailOtpKeyDown = (index, e) => {
     if (e.key === "Backspace" && !emailOtp[index] && index > 0)
@@ -108,49 +105,73 @@ export default function ContactVerification({
   };
 
   const handleSendOtp = (field) => {
-  const newErrors = {};
-  if (field === "phone") {
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Mobile number is required";
-    } else if (!/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = "Enter a valid 10-digit mobile number";
-    } else {
-      setOtpSent((prev) => ({ ...prev, phone: true }));
-      setPhoneOtp(["", "", "", "", "", ""]);
-      startCountdown();
-      sendOtp("phone");
+    const newErrors = {};
+    if (field === "phone") {
+      if (!formData.phone.trim()) {
+        newErrors.phone = "Mobile number is required";
+      } else if (!/^\d{10}$/.test(formData.phone)) {
+        newErrors.phone = "Enter a valid 10-digit mobile number";
+      } else {
+        setOtpSent((prev) => ({ ...prev, phone: true }));
+        setPhoneOtp(["", "", "", "", "", ""]);
+        setPhoneOtpVerified(false);
+        startCountdown();
+        sendOtp("phone");
+      }
     }
-  }
-  if (field === "email") {
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Enter a valid email address";
-    } else {
-      setOtpSent((prev) => ({ ...prev, email: true }));
-      setEmailOtp(["", "", "", "", "", ""]);
-      startEmailCountdown();
-      sendOtp("email");
+    if (field === "email") {
+      if (!formData.email.trim()) {
+        newErrors.email = "Email is required";
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = "Enter a valid email address";
+      } else {
+        setOtpSent((prev) => ({ ...prev, email: true }));
+        setEmailOtp(["", "", "", "", "", ""]);
+        setEmailOtpVerified(false);
+        startEmailCountdown();
+        sendOtp("email");
+      }
     }
-  }
-  setErrors((prev) => ({ ...prev, ...newErrors }));
-};
+    setErrors((prev) => ({ ...prev, ...newErrors }));
+  };
 
   const handleNext = () => {
     if (!phoneOtpComplete || !emailOtpComplete) return;
     if (validate()) onNext();
   };
 
-const sendOtp = async (field) => {
+  const sendOtp = async (field) => {
+    const payload = field === "phone"
+      ? { type: "mobile_no", mobile_no: formData.phone }
+      : { type: "email", email: formData.email };
+
+    try {
+      const res = await post("sendOtp", payload);
+      console.log('res', res);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const verifyOtp = async (field, otp) => {
   const payload = field === "phone"
-    ? { type: "mobile_no", mobile_no: formData.phone }
-    : { type: "email", email: formData.email };
+    ? { type: "mobile_no", mobile_no: formData.phone, otp }
+    : { type: "email", email: formData.email, otp };
 
   try {
-    const res = await post("sendOtp", payload);
-    console.log('res', res)
-    if (field === "phone") setPhoneOtpFromApi(String(res.otp));
-    else setEmailOtpFromApi(String(res.otp));
+    const res = await post("verifyOtp", payload);
+    if (res.status === 201) {
+      if (field === "phone") {
+        setPhoneOtpVerified(false);
+        setErrors((prev) => ({ ...prev, phone: "Incorrect OTP, please try again" }));
+      } else {
+        setEmailOtpVerified(false);
+        setErrors((prev) => ({ ...prev, email: "Incorrect OTP, please try again" }));
+      }
+    } else {
+      if (field === "phone") setPhoneOtpVerified(true);
+      else setEmailOtpVerified(true);
+    }
   } catch (error) {
     console.log("error", error);
   }
@@ -182,7 +203,7 @@ const sendOtp = async (field) => {
           />
           {phoneOtpComplete && otpSent.phone ? (
             <span className="flex items-center px-3.5">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-[22px] h-[22px] text-[#4bae4f]" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[#4bae4f]" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
             </span>
@@ -201,8 +222,7 @@ const sendOtp = async (field) => {
           <p className="text-xs text-red-500 mt-1">{errors.phone}</p>
         )}
 
-        {/* OTP Section — hidden once complete */}
-        {otpSent.phone && !phoneOtpComplete && (
+        {otpSent.phone && !phoneOtpVerified && (
           <div className="mt-3 flex flex-col gap-2">
             <p className="text-xs text-[#6A7282]">
               OTP sent to +91 ********{formData.phone.slice(8, 10)}
@@ -260,7 +280,7 @@ const sendOtp = async (field) => {
           />
           {emailOtpComplete && otpSent.email ? (
             <span className="flex items-center px-3.5">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[#4bae4f]" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
             </span>
@@ -279,8 +299,7 @@ const sendOtp = async (field) => {
           <p className="text-xs text-red-500 mt-1">{errors.email}</p>
         )}
 
-        {/* OTP Section — hidden once complete */}
-        {otpSent.email && !emailOtpComplete && (
+        {otpSent.email && !emailOtpVerified && (
           <div className="mt-3 flex flex-col gap-2">
             <p className="text-xs text-[#6A7282]">
               OTP sent to {formData.email.replace(/(.{3}).*(@.*)/, "$1***$2")}

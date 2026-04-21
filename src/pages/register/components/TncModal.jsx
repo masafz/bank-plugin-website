@@ -93,7 +93,7 @@ export default function TncModal({ isOpen = false, onAgree, onClose }) {
             <ListItem><Term>"InstaBIZ"</Term> refers to ICICI Bank Mobile Banking application developed by ICICI Bank and whose intellectual property rights are vested with ICICI Bank.</ListItem>
             <ListItem><Term>"Payment Instructions"</Term> means the instructions to make payments given by the Customer to ICICI Bank through Bank Plugin.</ListItem>
             <ListItem><Term>"Services"</Term> includes but is not limited to initiating payment transactions, receiving payments, fetching current account balance and reconciliation functionalities of Bank Plugin.</ListItem>
-            <ListItem><Term>"Website"</Term> refers to the website owned, established and maintained by ICICI Bank at <a href="https://www.icicibank.in" target="_blank" rel="noreferrer" className="text-blue-600 underline hover:text-blue-800">www.icicibank.in</a>.</ListItem>
+            <ListItem><Term>"Website"</Term> refers to the website owned, established and maintained by ICICI Bank at <a href="https://www.icici.bank.in" target="_blank" rel="noreferrer" className="text-blue-600 underline hover:text-blue-800">www.icicibank.in</a>.</ListItem>
             <ListItem><Term>"Account Aggregator Module"</Term> means the module which is an extension of the Bank Plugin, that facilitates the Customer in extracting financial information of Other Accounts by providing the consent on Account Aggregator website and displaying the information within the ERP Platform for various purposes as a part of Bank Plugin.</ListItem>
             <ListItem><Term>"Account Aggregator"</Term> means the RBI Approved entities that provides the service of retrieving or collecting financial information pertaining to its customer.</ListItem>
             <ListItem><Term>"Other Accounts"</Term> means all other bank accounts except ICICI Bank Accounts.</ListItem>
@@ -231,7 +231,7 @@ export default function TncModal({ isOpen = false, onAgree, onClose }) {
             <ListItem>Customers agree to be vigilant regarding the payment transactions happening through their Bank Plugin Platform integrated with the ERP and shall intimate ICICI Bank any misuse, fraud or theft, as soon as the same is discovered.</ListItem>
             <ListItem>
               ICICI Bank follows a three level grievance redressal mechanism that is available on the website of the Bank. For details, please visit{" "}
-              <a href="https://www.icicibank.in" target="_blank" rel="noreferrer" className="text-blue-600 underline hover:text-blue-800">www.icicibank.in</a>{" "}
+              <a href="https://www.icici.bank.in" target="_blank" rel="noreferrer" className="text-blue-600 underline hover:text-blue-800">www.icicibank.in</a>{" "}
               and navigate to: Home &gt; Contact Us &gt; Queries/Complaints.
             </ListItem>
           </OrderedList>

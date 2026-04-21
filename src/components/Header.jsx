@@ -1,10 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import iciciLogo from "../assets/icons/icici-logo.png";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const hideOnPages = ['/register'];
+  const shouldShowLink = !hideOnPages.includes(location.pathname);
+
   return (
     <header className="h-[65px] bg-gradient-to-b from-[#EF7F1A] to-[#BE2A2A]">
       <div className="w-full max-w-[1920px] mx-auto flex justify-between items-center px-6 md:px-10 lg:px-16 h-full">
@@ -38,7 +43,7 @@ export default function Header() {
             }
             className="cursor-pointer"
           >
-            Register
+            {shouldShowLink ? 'Register' : 'Login'}
           </span>
         </nav>
         <button
