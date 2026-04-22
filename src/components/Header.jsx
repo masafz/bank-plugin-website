@@ -7,7 +7,7 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const hideOnPages = ['/register'];
+  const hideOnPages = ["/register"];
   const shouldShowLink = !hideOnPages.includes(location.pathname);
 
   return (
@@ -26,24 +26,24 @@ export default function Header() {
         </div>
         <nav className="hidden md:flex gap-8 text-[#FFFFFF] text-[18px] font-semibold items-center h-full">
           <span
-            onClick={() =>
-              window.open(
-                "https://www.bankplugin.com/support",
-                "_blank",
-                "noopener,noreferrer",
-              )
-            }
+            onClick={() => navigate('/support')}
             className="cursor-pointer"
           >
             Help & Support
           </span>
           <span
-            onClick={() =>
-              document.getElementById("erp-section")?.scrollIntoView({ behavior: "smooth" })
-            }
+            onClick={() => {
+              if (location.pathname === "/") {
+                document
+                  .getElementById("erp-section")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              } else {
+                navigate("/register");
+              }
+            }}
             className="cursor-pointer"
           >
-            {shouldShowLink ? 'Register' : 'Login'}
+            {shouldShowLink ? "Register" : "Login"}
           </span>
         </nav>
         <button
@@ -59,14 +59,7 @@ export default function Header() {
         <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-md z-10">
           <div className="flex flex-col px-6 py-4 gap-4 text-[15px] font-medium text-[#555]">
             <span
-              onClick={() => {
-                setIsOpen(false);
-                window.open(
-                  "https://www.bankplugin.com/support",
-                  "_blank",
-                  "noopener,noreferrer",
-                );
-              }}
+              onClick={() => navigate('/support')}
               className="cursor-pointer"
             >
               Help & Support
@@ -74,7 +67,13 @@ export default function Header() {
             <span
               onClick={() => {
                 setIsOpen(false);
-                document.getElementById("erp-section")?.scrollIntoView({ behavior: "smooth" })
+                if (location.pathname === "/") {
+                  document
+                    .getElementById("erp-section")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                } else {
+                  navigate("/register");
+                }
               }}
               className="cursor-pointer"
             >

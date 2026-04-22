@@ -2,6 +2,8 @@ import { useState } from "react";
 import Stepper from "./components/Stepper";
 import StepOne from "./steps/BusinessDetails";
 import StepTwo from "./steps/ContactVerification";
+import ellipse2 from "../../assets/icons/svgs/ellipse2.svg";
+import ellipse1 from "../../assets/icons/svgs/ellipse1.svg";
 import StepThree from "./steps/AccountSetup";
 import { post } from "../../api/apiHelpers";
 import { toast } from "react-toastify";
@@ -54,11 +56,11 @@ export default function RegisterPage() {
     try {
       const res = await post("register", payload);
       console.log(res);
-      if(res?.status === '200') {
-        toast.success(res?.msg)
-        window.location.href = 'https://www.bankplugin.com'
-      } else if( res?.status === '201') {
-        toast.error(res?.msg[0])
+      if (res?.status === "200") {
+        toast.success(res?.msg);
+        window.location.href = "https://www.bankplugin.com";
+      } else if (res?.status === "201") {
+        toast.error(res?.msg[0]);
       }
     } catch (err) {
       console.error(err);
@@ -85,7 +87,17 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-65px)] bg-white flex justify-center items-center px-4 py-12">
+    <div className="relative min-h-[calc(100vh-65px)] bg-white flex justify-center items-center px-4 py-12">
+      <img
+        src={ellipse1}
+        alt="icon"
+        className="absolute top-0 right-0 overflow-hidden opacity-5 w-64 h-64"
+      />
+      <img
+        src={ellipse2}
+        alt="icon"
+        className="absolute bottom-0 left-0 overflow-hidden opacity-5 w-64 h-64"
+      />
       <div className="bg-white rounded-xl px-3 sm:px-5 py-10 w-full max-w-[520px] shadow-[0px_4px_24px_0px_#00000014]">
         <h1 className="text-[25px] sm:text-3xl font-black text-[#1E2939] mb-2">
           Register for Bank Plugin

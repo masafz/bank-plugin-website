@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ellipse1 from "../../assets/icons/svgs/ellipse1.svg";
+import ellipse2 from "../../assets/icons/svgs/ellipse2.svg";
 import arrowIcon from "../../assets/icons/svgs/arrow.svg";
 import { post } from "../../api/apiHelpers";
 import { toast } from "react-toastify";
@@ -98,9 +100,16 @@ export default function ResetPage() {
 
   return (
     <div className="min-h-[calc(100vh-65px)] flex flex-col relative overflow-hidden">
-      {/* Decorative blobs */}
-      <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-orange-200/30 -translate-x-1/4 translate-y-1/4 blur-2xl" />
-      <div className="absolute top-20 right-0 w-44 h-44 rounded-full bg-orange-300/20 translate-x-1/4 blur-2xl" />
+      <img
+        src={ellipse1}
+        alt="icon"
+        className="absolute top-0 right-0 overflow-hidden opacity-5 w-64 h-64"
+      />
+      <img
+        src={ellipse2}
+        alt="icon"
+        className="absolute bottom-0 left-0 overflow-hidden opacity-5 w-64 h-64"
+      />
 
       <main className="flex-1 flex items-center justify-center px-4 py-12 relative z-10">
         <div className="rounded-2xl shadow-[0px_4px_39.8px_3px_#E5E7EB] border border-orange-100 w-full max-w-md px-10 py-10">

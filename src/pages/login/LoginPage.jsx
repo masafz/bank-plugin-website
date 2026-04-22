@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { post } from "../../api/apiHelpers";
-import { toast } from "react-toastify";
+import ellipse1 from "../../assets/icons/svgs/ellipse1.svg";
+import ellipse2 from "../../assets/icons/svgs/ellipse2.svg";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const inputBase =
   "w-full border rounded-lg px-4 py-3 text-sm text-gray-700 placeholder-gray-400 bg-orange-50/40 focus:outline-none focus:ring-2 transition-all";
@@ -16,9 +18,11 @@ const inputClass = (hasError) =>
 const validate = ({ mobile, password }) => {
   const errors = {};
   if (!mobile.trim()) errors.mobile = "Mobile number is required.";
-  else if (mobile.length !== 10) errors.mobile = "Enter a valid 10-digit mobile number.";
+  else if (mobile.length !== 10)
+    errors.mobile = "Enter a valid 10-digit mobile number.";
   if (!password.trim()) errors.password = "Password is required.";
-  else if (password.length < 6) errors.password = "Password must be at least 6 characters.";
+  else if (password.length < 6)
+    errors.password = "Password must be at least 6 characters.";
   return errors;
 };
 
@@ -50,9 +54,16 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[calc(100vh-65px)] flex flex-col relative overflow-hidden">
-      {/* Decorative blobs */}
-      <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-orange-200/30 -translate-x-1/4 translate-y-1/4 blur-2xl" />
-      <div className="absolute top-20 right-0 w-44 h-44 rounded-full bg-orange-300/20 translate-x-1/4 blur-2xl" />
+      <img
+        src={ellipse1}
+        alt="icon"
+        className="absolute top-0 right-0 overflow-hidden opacity-5 w-64 h-64"
+      />
+      <img
+        src={ellipse2}
+        alt="icon"
+        className="absolute bottom-0 left-0 overflow-hidden opacity-5 w-64 h-64"
+      />
 
       {/* Login Card */}
       <main className="flex-1 flex items-center justify-center px-4 py-12 relative z-10">
@@ -109,7 +120,7 @@ export default function LoginPage() {
 
           {/* Sign In Button */}
           <button
-            className="w-full text-white font-semibold py-3.5 rounded-xl text-sm tracking-wide shadow-md hover:brightness-110 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+            className="w-full text-white font-semibold py-3.5 rounded-xl text-sm tracking-wide shadow-md hover:brightness-110 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer"
             style={{
               background: "linear-gradient(90deg, #d94f15 0%, #e8721c 100%)",
             }}

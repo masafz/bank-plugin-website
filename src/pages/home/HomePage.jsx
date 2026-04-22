@@ -109,7 +109,7 @@ export default function HomePage() {
                   Register
                   <img src={rightWhite} alt="arrow" width={20} />
                 </button>
-                <button className="group relative w-full sm:w-auto flex justify-center items-center gap-2.5 border border-[#DB620A] bg-white text-[#DB620A] px-6 sm:px-10 lg:px-[60px] py-[10px] rounded-[8px] text-[14px] sm:text-[16px] lg:text-[18px] font-medium transition-all duration-300 hover:bg-[#DB620A] hover:text-white" onClick={() => navigate('/login')}>
+                <button className="group relative w-full sm:w-auto flex justify-center items-center gap-2.5 border border-[#DB620A] bg-white text-[#DB620A] px-6 sm:px-10 lg:px-[60px] py-[10px] rounded-[8px] text-[14px] sm:text-[16px] lg:text-[18px] font-medium transition-all duration-300 hover:bg-[#DB620A] hover:text-white cursor-pointer" onClick={() => navigate('/login')}>
                   Login
                   <span className="relative w-[20px] h-[20px]">
                     <img
