@@ -190,8 +190,6 @@ export default function SupportPage() {
     }
   };
 
-  console.log('first')
-
   return (
     <div className="min-h-[calc(100vh-65px)]">
       <div className="max-w-[1920px] mx-auto px-3 md:px-[50px] lg:px-[75px] py-10 flex flex-col lg:flex-row gap-8 items-start">
