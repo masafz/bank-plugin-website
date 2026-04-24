@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function SuccessPopup({ requestId = "S742403581B", onClose }) {
+export default function SupportPopup({ requestId = "S742403581B", onClose }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

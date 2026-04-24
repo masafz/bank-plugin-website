@@ -1,10 +1,11 @@
 import { useState } from "react";
-import supportImg from "../../assets/icons/svgs/support.svg";
+import SupportPopup from "./components/SupportPopup";
 import mailIcon from "../../assets/icons/svgs/mail.svg";
+import supportImg from "../../assets/icons/svgs/support.svg";
 import phoneIcon from "../../assets/icons/svgs/phone.svg";
+import DemoPopup from "./components/DemoPopup";
 import { post } from "../../api/apiHelpers";
 import { toast } from "react-toastify";
-import SuccessPopup from "./components/SuccessPopup";
 
 const inputBase =
   "w-full border rounded-lg px-4 py-3 text-sm text-gray-700 placeholder-gray-400 bg-orange-50/40 focus:outline-none focus:ring-2 transition-all";
@@ -17,10 +18,10 @@ const inputClass = (hasError) =>
   }`;
 
 const selectClass = (hasError) =>
-  `w-full border rounded-xl px-4 py-3 text-sm text-gray-500 bg-white focus:outline-none focus:ring-2 transition ${
+  `w-full border rounded-lg px-4 py-3 text-sm text-gray-700 placeholder-gray-400 bg-orange-50/40 focus:outline-none focus:ring-2 transition-all ${
     hasError
       ? "border-red-400 focus:border-red-400 focus:ring-red-100"
-      : "border-gray-200 focus:ring-orange-300 focus:border-orange-400"
+      : "border-gray-200 focus:border-orange-400 focus:ring-orange-100"
   }`;
 
 const FieldError = ({ msg }) =>
@@ -58,20 +59,31 @@ const validateDemo = ({
   return errors;
 };
 
-const validateSupport = ({ issueType, description }) => {
+const validateSupport = ({ companyName, email, mobile, productType, bankName, queryCategory, message, attachment }) => {
   const errors = {};
-  if (!issueType) errors.issueType = "Please select an issue type.";
-  if (!description.trim()) errors.description = "Description is required.";
-  else if (description.trim().length < 10)
-    errors.description = "Description must be at least 10 characters.";
+  if (!companyName.trim()) errors.companyName = "Company name is required.";
+  if (!email.trim()) errors.email = "Email address is required.";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    errors.email = "Enter a valid email address.";
+  if (!mobile.trim()) errors.mobile = "Mobile number is required.";
+  else if (!/^\d{10}$/.test(mobile))
+    errors.mobile = "Enter a valid 10-digit mobile number.";
+  if (!productType) errors.productType = "Please select a product type.";
+  if (!bankName) errors.bankName = "Please select a bank name.";
+  if (!queryCategory) errors.queryCategory = "Please select a query category.";
+  if (!message.trim()) errors.message = "Message is required.";
+  else if (message.trim().length < 10)
+    errors.message = "Message must be at least 10 characters.";
+  if (!attachment) errors.attachment = "Please attach a file.";
   return errors;
 };
 
-export default function Support() {
+export default function SupportPage() {
   const [demoOpen, setDemoOpen] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
   const [rmPartner, setRmPartner] = useState(true);
-  const [showPopup, setShowPopup] = useState(false);
+  const [showDemoPopup, setShowDemoPopup] = useState(false);
+  const [showSupportPopup, setShowSupportPopup] = useState(false);
   const [requestId, setRequestId] = useState("");
 
   const [demoForm, setDemoForm] = useState({
@@ -87,8 +99,14 @@ export default function Support() {
   const [demoErrors, setDemoErrors] = useState({});
 
   const [supportForm, setSupportForm] = useState({
-    issueType: "",
-    description: "",
+    companyName: "",
+    email: "",
+    mobile: "",
+    productType: "",
+    bankName: "",
+    queryCategory: "",
+    message: "",
+    attachment: null,
   });
   const [supportErrors, setSupportErrors] = useState({});
 
@@ -102,11 +120,16 @@ export default function Support() {
     setSupportErrors((prev) => ({ ...prev, [e.target.name]: "" }));
   };
 
+  const handleSupportFileChange = (e) => {
+    const file = e.target.files[0];
+    setSupportForm({ ...supportForm, attachment: file || null });
+    setSupportErrors((prev) => ({ ...prev, attachment: "" }));
+  };
+
   const handleDemoSubmit = async () => {
     const errs = validateDemo({ ...demoForm, rmPartner });
     if (Object.keys(errs).length) return setDemoErrors(errs);
     setDemoErrors({});
-    // TODO: submit demo request
     const payload = {
       category: "3-request_demo",
       company_name: demoForm.companyName,
@@ -123,10 +146,9 @@ export default function Support() {
     };
     try {
       const res = await post("demo-support-query", payload);
-      console.log('res', res)
       if(res?.status === '200') {
         setRequestId(res?.ticket_no)
-        setShowPopup(true);
+        setShowDemoPopup(true);
       } else {
         toast.error(res?.msg)
       }
@@ -135,18 +157,42 @@ export default function Support() {
     }
   };
 
-  const handleSupportSubmit = () => {
+  const handleSupportSubmit = async () => {
     const errs = validateSupport(supportForm);
     if (Object.keys(errs).length) return setSupportErrors(errs);
     setSupportErrors({});
-    // TODO: submit support request
-  };
 
-  console.log("demoForm", demoForm);
+    const formData = new FormData();
+    formData.append("category", supportForm.queryCategory);
+    formData.append("subject", supportForm.queryCategory);
+    formData.append("message", supportForm.message);
+    formData.append("phone", supportForm.mobile);
+    formData.append("email", supportForm.email);
+    formData.append("company_name", supportForm.companyName);
+    formData.append("customer_name", supportForm.companyName);
+    formData.append("plugin_type", supportForm.productType);
+    formData.append("bank_name", supportForm.bankName);
+    formData.append("demo", "1");
+    if (supportForm.attachment) {
+      formData.append("Attachment", supportForm.attachment);
+    }
+
+    try {
+      const res = await post("support-query", formData);
+      if (res?.status === "200") {
+        setRequestId(res?.ticket_no);
+        setShowSupportPopup(true);
+      } else {
+        toast.error(res?.msg);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   return (
     <div className="min-h-[calc(100vh-65px)]">
-      <div className="max-w-[1920px] mx-auto px-[75px] py-10 flex flex-col lg:flex-row gap-8 items-start">
+      <div className="max-w-[1920px] mx-auto px-3 md:px-[50px] lg:px-[75px] py-10 flex flex-col lg:flex-row gap-8 items-start">
         {/* Left Panel */}
         <div className="w-full lg:w-[50%] bg-[#FBEFE6] rounded-2xl p-8 flex flex-col items-center text-center flex-shrink-0">
           <img src={supportImg} alt="support" />
@@ -198,11 +244,11 @@ export default function Support() {
             </button>
 
             {demoOpen && (
-              <div className="px-7 pb-7">
+              <div className="px-2 sm:px-5 lg:px-7 pb-7">
                 <div className="grid grid-cols-1 gap-5">
                   {/* Company Name */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
                       Company Name<span className="text-red-500">*</span>
                     </label>
                     <input
@@ -218,7 +264,7 @@ export default function Support() {
 
                   {/* Email */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
                       Email Address<span className="text-red-500">*</span>
                     </label>
                     <input
@@ -234,7 +280,7 @@ export default function Support() {
 
                   {/* Mobile */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
                       Mobile Number<span className="text-red-500">*</span>
                     </label>
                     <input
@@ -257,7 +303,7 @@ export default function Support() {
 
                   {/* Product Type */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
                       Product Type<span className="text-red-500">*</span>
                     </label>
                     <input
@@ -274,7 +320,7 @@ export default function Support() {
                   {/* Date & Time */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                      <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
                         Suitable Date For Demo
                         <span className="text-red-500">*</span>
                       </label>
@@ -289,7 +335,7 @@ export default function Support() {
                       <FieldError msg={demoErrors.date} />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                      <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
                         Suitable Time For Demo
                         <span className="text-red-500">*</span>
                       </label>
@@ -323,7 +369,7 @@ export default function Support() {
                     />
                     <label
                       htmlFor="rmPartner"
-                      className="text-sm font-medium text-gray-700 cursor-pointer"
+                      className="text-sm font-semibold text-gray-700 cursor-pointer"
                     >
                       R/M Partner Details
                     </label>
@@ -333,7 +379,7 @@ export default function Support() {
                   {rmPartner && (
                     <>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                        <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
                           R/M Partner ID<span className="text-red-500">*</span>
                         </label>
                         <input
@@ -347,7 +393,7 @@ export default function Support() {
                         <FieldError msg={demoErrors.rmPartnerId} />
                       </div>
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                        <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
                           RM/Partner Mobile Number
                           <span className="text-red-500">*</span>
                         </label>
@@ -390,7 +436,7 @@ export default function Support() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <button
               className="w-full flex items-center justify-between px-7 py-5 cursor-pointer"
-              // onClick={() => setSupportOpen((v) => !v)}
+              onClick={() => setSupportOpen((v) => !v)}
             >
               <span
                 className={`${supportOpen ? "text-[#DB620A]" : "text-black"} font-bold text-lg`}
@@ -405,45 +451,174 @@ export default function Support() {
             </button>
 
             {supportOpen && (
-              <div className="px-7 pb-7">
+              <div className="px-2 sm:px-5 lg:px-7 pb-7">
                 <div className="grid grid-cols-1 gap-5">
+                  {/* Company Name */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Issue Type<span className="text-red-500">*</span>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
+                      Company Name<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="companyName"
+                      value={supportForm.companyName}
+                      onChange={handleSupportChange}
+                      placeholder="Enter your company name"
+                      className={inputClass(supportErrors.companyName)}
+                    />
+                    <FieldError msg={supportErrors.companyName} />
+                  </div>
+
+                  {/* Email Address */}
+                  <div>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
+                      Email Address<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={supportForm.email}
+                      onChange={handleSupportChange}
+                      placeholder="Enter your email address"
+                      className={inputClass(supportErrors.email)}
+                    />
+                    <FieldError msg={supportErrors.email} />
+                  </div>
+
+                  {/* Mobile Number */}
+                  <div>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
+                      Mobile Number<span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      name="mobile"
+                      maxLength={10}
+                      value={supportForm.mobile}
+                      onChange={(e) => {
+                        setSupportForm({
+                          ...supportForm,
+                          mobile: e.target.value.replace(/\D/g, ""),
+                        });
+                        setSupportErrors((prev) => ({ ...prev, mobile: "" }));
+                      }}
+                      placeholder="Enter your mobile number"
+                      className={inputClass(supportErrors.mobile)}
+                    />
+                    <FieldError msg={supportErrors.mobile} />
+                  </div>
+
+                  {/* Product Type */}
+                  <div>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
+                      Product Type<span className="text-red-500">*</span>
                     </label>
                     <select
-                      name="issueType"
-                      value={supportForm.issueType}
+                      name="productType"
+                      value={supportForm.productType}
                       onChange={handleSupportChange}
-                      className={selectClass(supportErrors.issueType)}
+                      className={selectClass(supportErrors.productType)}
                     >
-                      <option value="">Select issue type</option>
-                      <option>Technical Issue</option>
-                      <option>Account Query</option>
-                      <option>Integration Help</option>
-                      <option>Other</option>
+                      <option value="">Select</option>
+                      <option>Tally Prime</option>
+                      <option>Tally ERP 9</option>
                     </select>
-                    <FieldError msg={supportErrors.issueType} />
+                    <FieldError msg={supportErrors.productType} />
                   </div>
+
+                  {/* Bank Name */}
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Description<span className="text-red-500">*</span>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
+                      Bank Name<span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="bankName"
+                      value={supportForm.bankName}
+                      onChange={handleSupportChange}
+                      className={selectClass(supportErrors.bankName)}
+                    >
+                      <option value="">Select</option>
+                      <option>ICICI Bank</option>
+                      <option>HDFC Bank</option>
+                      <option>SBI</option>
+                      <option>Axis Bank</option>
+                    </select>
+                    <FieldError msg={supportErrors.bankName} />
+                  </div>
+
+                  {/* Query Category */}
+                  <div>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
+                      Query Category<span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="queryCategory"
+                      value={supportForm.queryCategory}
+                      onChange={handleSupportChange}
+                      className={selectClass(supportErrors.queryCategory)}
+                    >
+                      <option value="">Select</option>
+                      <option>1-TECHNICAL</option>
+                      <option>1-ACCOUNT</option>
+                    </select>
+                    <FieldError msg={supportErrors.queryCategory} />
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
+                      Message<span className="text-red-500">*</span>
                     </label>
                     <textarea
-                      name="description"
+                      name="message"
                       rows={4}
-                      value={supportForm.description}
+                      value={supportForm.message}
                       onChange={handleSupportChange}
-                      placeholder="Describe your issue in detail..."
-                      className={`${inputClass(supportErrors.description)} resize-none`}
+                      placeholder=""
+                      className={`${inputClass(supportErrors.message)} resize-none`}
                     />
-                    <FieldError msg={supportErrors.description} />
+                    <FieldError msg={supportErrors.message} />
                   </div>
+
+                  {/* Attachment */}
+                  <div>
+                    <label className="block text-sm font-extrabold text-gray-700 mb-1.5">
+                      Attachment<span className="text-red-500">*</span>
+                    </label>
+                    <div
+                      className={`flex items-center w-full border rounded-xl overflow-hidden bg-white transition ${
+                        supportErrors.attachment
+                          ? "border-red-400"
+                          : "border-gray-200"
+                      }`}
+                    >
+                      <label className="px-4 py-3 bg-gray-100 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-200 transition whitespace-nowrap border-r border-gray-200">
+                        Choose File
+                        <input
+                          type="file"
+                          accept=".png,.jpeg,.jpg,.pdf,.docx,.doc"
+                          onChange={handleSupportFileChange}
+                          className="hidden"
+                        />
+                      </label>
+                      <span className="px-4 text-sm text-gray-400 truncate flex-1">
+                        {supportForm.attachment
+                          ? supportForm.attachment.name
+                          : "No File Chosen"}
+                      </span>
+                    </div>
+                    <p className="text-gray-400 text-xs mt-1">
+                      Only png, jpeg, jpg, pdf, docx, doc formats are allowed
+                    </p>
+                    <FieldError msg={supportErrors.attachment} />
+                  </div>
+
+                  {/* Submit */}
                   <button
                     onClick={handleSupportSubmit}
-                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-red-500 text-white font-semibold py-3.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-orange-200 hover:shadow-lg text-sm tracking-wide"
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-red-500 text-white font-semibold py-3.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-orange-200 hover:shadow-lg text-sm tracking-wide cursor-pointer"
                   >
-                    Submit Request
+                    Request Support
                   </button>
                 </div>
               </div>
@@ -451,12 +626,18 @@ export default function Support() {
           </div>
         </div>
       </div>
-      {showPopup && (
-      <SuccessPopup
-        requestId={requestId}
-        onClose={() => setShowPopup(false)}
-      />
-    )}
+      {showDemoPopup && (
+        <DemoPopup
+          requestId={requestId}
+          onClose={() => setShowDemoPopup(false)}
+        />
+      )}
+      {showSupportPopup && (
+        <SupportPopup
+          requestId={requestId}
+          onClose={() => setShowSupportPopup(false)}
+        />
+      )}
     </div>
   );
 }
